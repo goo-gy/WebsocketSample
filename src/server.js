@@ -1,4 +1,6 @@
 import express from 'express';
+import http from 'http';
+import WebSocket from 'ws';
 
 const app = express();
 
@@ -12,6 +14,13 @@ app.get('/*', (req, res) => {
   res.redirect('/');
 });
 
-const handleListen = () => console.log('Listening on 4000');
+const httpServer = http.createServer(app);
+const wss = new WebSocket.Server({ server: httpServer });
 
-app.listen(4000, handleListen);
+const handleConnection = (socket) => {
+  console.log(socket);
+};
+wss.on('connection', handleConnection);
+
+const handleListen = () => console.log('Listening on 3000');
+httpServer.listen(3000, handleListen);

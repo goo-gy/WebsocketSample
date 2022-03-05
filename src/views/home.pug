@@ -10,6 +10,8 @@ html(lang="en")
         header
             h1 Zoom Copy
         main
-            h2 Welcome
-            button Call
+            div#welcome
+                form
+                    input(placeholder="room name", required, type="text")
+                    button Enter Room
         script(src="/public/js/app.js")
