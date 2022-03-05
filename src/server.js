@@ -17,10 +17,14 @@ app.get('/*', (req, res) => {
 const httpServer = http.createServer(app);
 const wss = new WebSocket.Server({ server: httpServer });
 
-const handleConnection = (socket) => {
-  console.log(socket);
-};
-wss.on('connection', handleConnection);
+wss.on('connection', (socket) => {
+  console.log(`Connected! (${socket})`);
+  socket.send('Hello!!');
+  socket.on('message', (message) => {
+    console.log('Browser says:', message);
+  });
+  socket.on('close', () => console.log(`Disconnected!! (${socket})`));
+});
 
 const handleListen = () => console.log('Listening on 3000');
 httpServer.listen(3000, handleListen);
