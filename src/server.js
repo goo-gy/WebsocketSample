@@ -15,15 +15,25 @@ app.get('/*', (req, res) => {
 });
 
 const httpServer = http.createServer(app);
-const wss = new WebSocket.Server({ server: httpServer });
+const ws = new WebSocket.Server({ server: httpServer });
 
-wss.on('connection', (socket) => {
+let socketList = [];
+
+ws.on('connection', (socket) => {
+  socketList.push(socket);
   console.log(`Connected! (${socket})`);
-  socket.send('Hello!!');
+
   socket.on('message', (message) => {
-    console.log('Browser says:', message);
+    console.log(socketList.length);
+    socketList.forEach((socket) => {
+      socket.send(message.toString());
+    });
   });
-  socket.on('close', () => console.log(`Disconnected!! (${socket})`));
+
+  socket.on('close', () => {
+    console.log(`Disconnected!! (${socket})`);
+    socketList = socketList.filter((item) => item !== socket);
+  });
 });
 
 const handleListen = () => console.log('Listening on 3000');
