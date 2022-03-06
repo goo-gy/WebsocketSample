@@ -34,17 +34,14 @@ ws.on('connection', (socket) => {
     console.log(data);
     switch (data.type) {
       case types.message:
-        socket.send(`${socket['nickName']}: ${data.payload}`);
+        socketList.forEach((eachSocket) => {
+          eachSocket.send(`${socket['nickName']}: ${data.payload}`);
+        });
         break;
       case types.nickName:
         socket['nickName'] = data.payload;
         break;
     }
-
-    // console.log(socketList.length);
-    // socketList.forEach((socket) => {
-    //   socket.send(message.toString());
-    // });
   });
 
   socket.on('close', () => {
