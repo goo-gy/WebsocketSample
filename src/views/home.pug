@@ -11,7 +11,10 @@ html(lang="en")
             h1 Zoom Copy
         main
             div#welcome
-                form
+                form#nickname
+                    input(placeholder="Nickname", required, type="text")
+                    button Save
+                form#message
                     ul
                     input(placeholder="message", required, type="text")
                     button Send

@@ -2,6 +2,11 @@ import express from 'express';
 import http from 'http';
 import WebSocket from 'ws';
 
+const types = {
+  nickName: 'nickname',
+  message: 'message',
+};
+
 const app = express();
 
 app.set('view engine', 'pug');
@@ -22,12 +27,24 @@ let socketList = [];
 ws.on('connection', (socket) => {
   socketList.push(socket);
   console.log(`Connected! (${socket})`);
+  socket['nickName'] = 'anony';
 
   socket.on('message', (message) => {
-    console.log(socketList.length);
-    socketList.forEach((socket) => {
-      socket.send(message.toString());
-    });
+    const data = JSON.parse(message.toString());
+    console.log(data);
+    switch (data.type) {
+      case types.message:
+        socket.send(`${socket['nickName']}: ${data.payload}`);
+        break;
+      case types.nickName:
+        socket['nickName'] = data.payload;
+        break;
+    }
+
+    // console.log(socketList.length);
+    // socketList.forEach((socket) => {
+    //   socket.send(message.toString());
+    // });
   });
 
   socket.on('close', () => {
